@@ -1,0 +1,92 @@
+ĐỀ TÀI: ỨNG DỤNG HỌC MÁY : GIẢI THUẬT RỪNG NGẪU NHIÊN
+		(APPLIED MACHINE LEARNING : Bagging - Random Forest
+II. RANDOM FOREST
+	-	Giải thuật Random Forest là một giải thuật đặc trưng của phương pháp Bangging. 
+	-	Đây là 1 giải thuật dựa trên một giải thuật đơn giản hơn đó là Decision Tree
+	
+1. Decision Tree
+	-	Tổng quan một số kiến thức chúng ta đã học về giải thuật Decision Tree.
+	- Ưu và Nhược điểm của giải thuật này
+		+ Ưu điểm: Dễ để tạo nên, dễ sử dụng và khá dễ để giải thích. Giải thuật không có nhiều biểu thức toán học phức tạp.
+		+ Nhược điểm: giải thuật rất nhạy cảm với dữ liệu tranning set. Nếu chúng ta thay đổi dữ liệu huấn luyện thì kết quả dự đoán của giải thuật cây quyết định sẽ khác đi làm cho sai số phương sai khá lớn. Dấn đến hiện tượng overfitting.
+	- Để giữ được ưu điểm của giải thuật Decision Tree và khắc phục được khuyết điểm của nó thì Giải thuật Random Forest sẽ làm điều này.
+	
+2. Random Forest
+	-	 Ý tưởng của giải thuật là tạo ra nhiêu cây khác nhau và những cây này cùng huấn luyện một bộ dữ liệu. Sau đó tổng hợp kết quả của các cây này lại và đưa ra dự đoán cuối cùng.
+	- Điều này hoàn toàn phù hợp với phương pháp Bagging dựa trên việc tạo ra nhiều sample khác nhau từ 1 dataset và đưa các sample này vào huấn luyện trong nhiều cây quyết định sau đó tổng hợp kết quả cảu các cây này lại và đưa ra dự đoán.
+	- Nó khắc phục được khuyết điểm về sai số của giải thuật Decision Tree dựa vào ưu điểm của giải thuật Bagging mà vẫn giữ được ưu điểm của Decision Tree về cơ chế hoạt động dễ hiểu.
+	
+3. Build Random Forest
+	- Step 1: Tạo các mẫu Bootstrap sample từ quá trình Bootstraping. 
+	Từ Tranning set ban đầu với n đặc trưng input, n features. Sau đó thực hiện quá trình Bootstrapping tạo nên K sample
+	
+	* Nếu các mẫu này thực hiện đơn giản qua việc huấn luyện bằng một cây quyết đinh thì đó chính là sử dụng phương pháp Bagging.
+	* Tuy nhiên quá trình này có một số sự khác biệt
+		+ Thay vì cây quyết định sử dụng tất cả các đặc trưng input để thực hiện quá trình tách các node nhánh ,node lá
+		+ Thì đối với giải thuật rừng ngẫu nhiên thì số features sử dụng để tách những node nhánh,node lá... không phải là toàn bộ các đặc trưng của dữ liệu mà chỉ là 1 số ngẫu nhiên các đặc trưng.
+	* Đặc trưng của quá trình Bootraping
+	Việc này là do trong quá trình Bootraping, các sample mới được tạo qua việc lấy ngẫu nhiên từ bộ dữ liệu gốc có n features, thì quá trình này có thể lấy hết n các features hoặc chỉ lấy một m features/ n features.
+	(m là một số lượng ngẫu nhiên các features và nó < số lượng features của dữ liệu gốc )
+	Ví dụ : 
+	Training set có các đặc trưng: "outlook" "temperature" "humidity" "windy" : 4 đặc trưng
+	Sau khi Bootraping tạo ra n sample:
+	- Sample 1 có 3 đặc trưng ( "outlook" "temperature" "temperature" "windy")
+	- Sample 2 có 3 đặc trưng ("outlook" "outlook" "humidity" "windy")
+	...
+	- Sample n có 2 đặc trưng ("outlook" "temperature" "temperature" "temperature")
+	
+	Step 2:
+	* Đặc trưng để thực hiện quá trình tách nhánh
+	Từ các đặc trưng của quá trình Bootstraping việc tách nhánh sẽ triển khai khác nhau với mỗi mô hình do node tách sẽ dựa trên nhưng đặc trưng của bộ dữ liệu
+	
+	-> Từ đó các cây quyết định để huấn luyện mô hình đều có cấu trúc khác nhau, đa dạng hơn, rừng ngẫu nhiên đa dạng hơn. Không chỉ đa dạng về dữ liệu huấn luyện mà còn đa dạng về cấu trúc cây quyết định.
+	=> Giúp tránh được tình trạng overfiting và kết quả dự đoán tốt và chính xác hơn
+	
+	Sau khi huấn luyện xong tất cả các mô hình. Quá trình dự đoán cũng tương tự giải thuật Bagging. 
+	Nếu chúng ta nhập 1 mẫu mới vào models, mẫy này sẽ được đưa và tất các cây quyết định.
+	Cây sẽ thực hiện các dự đoán, 
+	Kết quả cuối cùng được chọn dựa trên nguyên tắc Voting hoặc Lấy trung bình
+	
+4. 	Sử dụng giải thuật randomforest
+	file randomforest-test.py
+	
+5. 	Đặc trưng quan trọng
+	file randomforest-test.py
+
+6.  HYPERPARAMETERS
+		- n_estimator: Số lượng cây quyết định. Là số lượng cây quyết định riêng lẻ sẽ được xây dựng trong mô hình rừng ngẫu nhiên.Thường từ 100 đến 1000 (mặc định là 100 trong thư viện scikit-learn).
+		
+		- Bootstrap: Xác định liệu các mẫu được sử dụng để xây dựng từng cây có được lấy có hoàn lại (with replacement) hay không.Giá trị: True (mặc định) cho phép lấy mẫu có hoàn lại (Bagging), tạo ra các tập dữ liệu huấn luyện khác nhau cho từng cây. False sử dụng toàn bộ tập dữ liệu.
+		
+		- max_features (default sqrt(n-features)).Số lượng đặc trưng lấy mẫu
+			+ Là số lượng đặc trưng (features) mà mô hình sẽ xét ngẫu nhiên tại mỗi lần phân hoạch (tại mỗi nút của cây) để tìm ra đặc trưng tốt nhất.
+			+ sqrt: Sử dụng căn bậc hai của tổng số đặc trưng
+			+ log2': Sử dụng $\log_2(\text{tổng số đặc trưng})$.
+			+ Số nguyên (int) hoặc Số thực (float): Chỉ định số lượng hoặc tỷ lệ đặc trưng cụ thể.
+			
+		- oob_score:Điểm ngoài túi (Out-of-Bag Score). Kích hoạt tính toán điểm ngoài túi.Giá trị: True (kích hoạt), False (mặc định là tắt).Ý nghĩa: Cho phép ước tính hiệu suất của mô hình trên dữ liệu chưa thấy mà không cần tập kiểm tra riêng biệt, vì nó sử dụng các mẫu bị bỏ sót trong quá trình Bagging (Out-of-Bag samples) để đánh giá.
+		
+		- random_state:Hạt giống ngẫu nhiên. Đặt giá trị hạt giống cho bộ tạo số ngẫu nhiên.Ý nghĩa: Đảm bảo rằng mỗi lần bạn chạy thuật toán, việc chia mẫu, lấy mẫu đặc trưng, và khởi tạo cây đều giống nhau, giúp kết quả có thể tái lập.
+		
+	Hyperparameter of Individual tree - 3 giá trị này chỉ cần setup 1 trong 3 không cần setup toàn bộ
+		- max_depth:Độ sâu tối đa. Giới hạn số lượng cấp bậc (level) tối đa của mỗi cây.Tác động: Kiểm soát độ phức tạp của cây. Giá trị thấp ngăn ngừa quá khớp (overfitting) nhưng có thể dẫn đến dưới khớp (underfitting).
+		- min_sanples_split:Số mẫu tối thiểu để phân hoạch.Số lượng mẫu tối thiểu mà một nút phải có để có thể được phân hoạch (tách) thành các nút con. default = 2
+		- min_sanples_leaf:Số mẫu tối thiểu tại lá.Số lượng mẫu tối thiểu phải có tại một nút lá (nút cuối cùng) sau khi phân hoạch.Tác động: Tương tự như min_samples_split, tham số này giúp kiểm soát việc quá khớp bằng cách đảm bảo rằng mọi quyết định cuối cùng đều dựa trên một số lượng mẫu đủ lớn. default = 1
+		
+7. Ưu điểm và nhược điểm của giải thuật Random Forest
+	- Ưu điểm
+		+ Độ chính xác trong phép dự đoán cao hơn
+		+ Giảm sai số phương sai cũng như overfitting. Vì số mẫu đã được đa dạng hơn từ quá trình Bootraping và từ việc điều khiển giá trị đặc trưng tối đa để lấy chỉ 1 số đặc trưng để build cây
+		+ Lấy được các đặc trưng quan trọng của input so với output dùng trong được phân loại lẫn hồi quy
+		+ Thừa hưởng các ưu điểm của giải thuật bagging
+	
+	- Nhược điểm
+		+ Tốn nhiều thời gian và tài nguyên phục vụ cho quá trình dự đoán do có nhiều cây quyết định 
+		+ Dễ thiên vị 1 loại dữ liệu mà bị chiếm ưu thế trong data
+	
+	
+	
+	
+	
+	
+

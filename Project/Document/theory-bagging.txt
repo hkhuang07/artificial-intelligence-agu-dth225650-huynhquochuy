@@ -1,0 +1,68 @@
+ĐỀ TÀI: ỨNG DỤNG HỌC MÁY : GIẢI THUẬT RỪNG NGẪU NHIÊN
+		(APPLIED MACHINE LEARNING : Bagging - Random Forest
+I. BAGGING
+1. Bootstraping:
+	Bootstraping là kỹ thuật tạo nên các mẫu mới từ bộ dữ liệu gốc.	[trình bày chi tiết hơn...]
+	Thường sử dụng trong thống kê và mãy học để tạo nên những bộ dữ liệu đa dạng hơn từ 1 bộ dữ liệu gốc.
+	Ví dụ 
+	-	Original Data: "outlook" "temperature" "humidity" "windy" 
+	- Xử lý random sample with replacement (một mẫu dữ liệu có thể random lấy ra nhiều lần).Lấy random các mẫu ra thành các member cho dữ liệu mới
+	- Tạo ra n các Bootstrap samples khác nhau
+		+ "outlook" "temperature" "temperature" "windy"
+		+ "outlook" "outlook" "humidity" "windy"
+		...
+		+ "outlook" "temperature" "temperature" "temperature"
+	-> Đây là phương pháp bootstraping, phương pháp tạo mẫu cơ bản được sử dụng trong baggging cũng như trong giải thuật Random Forest.
+	-	Từ 1 bộ dữ liệu ban đầu chúng ta sẽ có n bộ dữ liệu khác nhau. Khi huấn luyện model chúng ta sẽ có n models khác nhau tương ứng với n dữ liệu mới.
+	-> Giúp dữ liệu đa dạng hơn làm giảm sai số phương sai (Varialbe)
+	
+2. Bagging (Bootstrap và Aggreating): giảm phương sai và tránh overfiting 
+	Là kỹ thuật tạo nên bộ dữ liệu mới bằng phương pháp Bootstraping, sau đó tạo ra n models khác nhau dựa trên n samples được tạo ra từ quá trình bootstraping
+	Khi thực hiện dự đoán sẽ tổng hợp n kết quả đó lại, quá trình đó gọi là Bagging.
+	
+	Ví dụ
+	-	Original Data  Training set: "outlook" "temperature" "humidity" "windy" 
+	- Tạo ra n các Bootstrap samples khác nhau từ quá trình bootstraping randomly sample with replacement
+		+ "outlook" "temperature" "temperature" "windy" --> Model 1
+		+ "outlook" "outlook" "humidity" "windy" -> Model 2
+		...
+		+ "outlook" "temperature" "temperature" "temperature" --> Model 3
+	- Đưa các sample này vào quá trình huấn luyện, mỗi mô hình sẽ áp dụng các giải thuật học máy khác nhau như Decision tree, KNN, ... cho tất cả model xem như một "máy học cơ bản/ yếu" không đủ mạnh
+	- Do dữ liệu khác nhau sẽ tạo ra các mô hình khác nhau
+	- Quá trình huấn luyện song song và độc lập với nhau,
+	- Ý tưởng các mô hình học nhóm là 1 máy học thì sẽ yếu hơn nhiều máy học. Kết quả lấy ý kiến chung của nhiều người. Quá trình đó gọi là học nhóm, và kết quả đó được tin là tốt hơn, mạnh hơn.
+3. Bagging Prediction
+	Sau khi huấn luyện xong các mô hình đó xong, ta có n mô hình khác nhau. Nếu đưa 1 input vào , n mô hình sẽ nhận dạng n kết quả khác nhau, kết quả đó sẽ tập hợp lại.
+	Kết quả cuối cùng sẽ được cập nhật lại dựa trên nguyên tắc volting hoặc trung bình.
+	* Đối với giải thuật hồi quy sẽ là trung bình. Trung bình của n số được tạo ra từ mô hình
+	* Đối với vấn đề phân loại sẽ là volting, nghĩa là bầu chọn kết quả nào nhiều hơn, chiếm số đông hơn
+
+4. Baggging Ensemble Learing Using Decision Tree
+	file python bagging-test.py
+	
+5. Out of bag (OOB) Instances
+	Gắn liền với quá trình Bootraping là out of bag.
+	Các mẫu OOB là ....
+	
+	Trong quá trình Bootraping khi xử lý random lấy ngẫu nhiên các mẫu thành các sample khác nhau. Các mẫu được lấy sẽ được đưa vào traning set để huấn luyện mô hình, các mẫu chưa đươc lấy sẽ được vào OOB dùng là test set để kiểm tra mô hình.
+	Original Data: "outlook" "temperature" "humidity" "windy" 
+	- Tạo ra n các Bootstrap samples khác nhau
+		+ "outlook" "temperature" "temperature" "windy"  với mẫu này dữ liệu chưa được lấy là humidity sẽ được đưa vào Out of Bag
+		+ "outlook" "outlook" "humidity" "windy" với mẫu này dữ liệu chưa được lấy là temperature sẽ được đưa vào Out of Bag
+		...
+		+ "outlook" "temperature" "temperature" "temperature" với mẫu này dữ liệu chưa được lấy là humidity và windy sẽ được đưa vào Out of Bag
+	-	Các mẫu còn sót lại trong quá trình thực hiện Bootraping gọi là OOB instance. Như vậy trong giải thuật Bagging, các mẫu OOB được tận dụng để kiểm tra mô hình bởi vì các mẫu này hoàn toàn xa lạ với dữ liệu huấn luyện. Do dữ liệu huấn luyện không được nhìn thấy dữ liệu kiểm tra.
+	-	Sau khi so sánh điểm đánh giá dựa trên OOB và điểm đánh giá dựa trên bộ dữ liệu kiểm tra giúp kiểm tra tốt hơn và tránh overfiting
+6. Ưu và khuyết điểm
+-	Ưu:
+	+ Giảm sai số phương sai: do bộ dữ liệu được tạo ra nhiều bộ dữ liệu huấn luyện mới khác nhau từ đó ta đi huấn luyện các mô hình khác nhau ta lấy kết quả trung bình. => Điều đó giúp các kết quả huấn luyện không quá chênh lệch nhau giúp giảm sai số phương sai.
+	+ Linh hoạt: phương pháp Bagging có thể áp dụng cho nhiều giải thuật khác nhau, nhiều models khác nhau như Decision Tree, Logictic, KNN...
+	+ Giảm độ nhạy của mô hình: với những điểm dữ liệu ngoại lai, hay điểm nhiễu của tranning set vì phương pháp này lấy trung bình nên khắc phục được vấn đề này
+	+ Tiêu chuẩn đánh giá qua OOB giúp đánh giá mô hình tốt hơn
+	+ Vì có những mô hình chạy song song và độc lập nên có thể áp dụng để chạy trong các hệ thống máy tính Parallelization chạy nhiều processor cùng một lúc mỗi processor có thể xử lý 1 mô hình giúp quá trình huấn luyện chạy nhanh hơn.
+- Nhược:
+	+ Khó để giải thích: do lấy mẫu ngẫu nhiên, không biết được trong dữ liệu huấn luyện mô hình gồm những mẫu gì và sau đó kết quả lại tổng hợp từ nhiều mô hình khác nhau lại. Nên nó không rõ ràng là dữ liệu đó kết quả đó của mô hình nào. Nên vấn đề giải thích và hiểu được cách thức hoạt động của mô hình là rất khó khăn 
+	+ Tốn nhiều thời gian và bộ nhớ : do phải huấn luyện nhiều mô hình khác nhau sử dụng nhiều tài nguyên khi tiến hành dự đoán cũng như thực hiện quá trình huấn luyện.
+	+ Đối với những mô hình ổn định chẳng hạn linear regression thì phương pháp này không có cải thiện hiệu quả của mô hình nhiều
+	
+	
